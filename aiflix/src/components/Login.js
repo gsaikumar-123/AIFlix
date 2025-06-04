@@ -1,7 +1,16 @@
 import React from 'react';
 import Header from './Header';
+import { useState } from 'react';
+
+
+// Use formik library for validations if there are no.of forms to check validations
 
 const Login = () => {
+    const [isSignIn, setIsSignIn] = useState(true);
+
+    const handleSinIn = ()=>{
+        setIsSignIn(!isSignIn);
+    }
   return (
     <div className="relative h-screen w-full">
       <img
@@ -13,9 +22,16 @@ const Login = () => {
       <Header />
       <div className="flex justify-center items-center h-screen z-10 relative m-auto">
         <div className="bg-black bg-opacity-75 rounded-md w-full max-w-md py-12 px-16">
-          <h1 className="text-white text-3xl font-bold mb-8">Sign In</h1>
+          <h1 className="text-white text-3xl font-bold mb-8">{isSignIn? "Sign In" : "Sign Up"}</h1>
 
           <form className="flex flex-col space-y-5">
+            {!isSignIn && 
+                <input
+                className="p-4 bg-transparent bg-gray-50 bg-opacity-5 text-white rounded placeholder-gray-400 focus:ring-2 focus:ring-white border"
+                type="text"
+                placeholder="Enter your name"
+                />
+            }
             <input
               className="p-4 bg-transparent bg-gray-50 bg-opacity-5 text-white rounded placeholder-gray-400 focus:ring-2 focus:ring-white border"
               type="text"
@@ -27,22 +43,22 @@ const Login = () => {
               placeholder="Password"
             />
             <button className="bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700 transition">
-              Sign In
+              {isSignIn? "Sign In" : "Sign Up"}
             </button>
-            <h1 className='text-gray-400 text-center'>OR</h1>
-            <button className="text-white py-2 rounded font-semibold bg-gray-50 bg-opacity-20">
+            {isSignIn && <h1 className='text-gray-400 text-center'>OR</h1>}
+            {isSignIn && <button className="text-white py-2 rounded font-semibold bg-gray-50 bg-opacity-20">
               Use a sign-in code
-            </button>
-            <a href="/forget"className='text-white text-center underline'>Forgot password?</a>
+            </button>}
+            {isSignIn && <a href="/forget"className='text-white text-center underline'>Forgot password?</a>}
 
-            <div className="flex items-center text-gray-400 gap-3">
+            {isSignIn && <div className="flex items-center text-gray-400 gap-3">
                 <input type="checkbox" className="form-checkbox size-4" />
                 <p className='text-white text-[16px]'>Remember me</p>
-            </div>
+            </div>}
 
             <p className="text-gray-400">
-                New to Netflix?{' '}
-                <span className="text-white hover:underline cursor-pointer">Sign up now</span>.
+                {isSignIn ? "New to Netflix? " : "Already Registered? " }
+                <span onClick={handleSinIn} className="text-white hover:underline cursor-pointer">{isSignIn ? "Sign Up" : "Sign In"}</span>.
             </p>
           </form>
 
