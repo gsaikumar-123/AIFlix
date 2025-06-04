@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Header from './Header';
 import { useState } from 'react';
+import { checkValidData } from '../utils/validate';
 
 
 // Use formik library for validations if there are no.of forms to check validations
 
 const Login = () => {
     const [isSignIn, setIsSignIn] = useState(true);
+    const [errMsg,setErrMsg] = useState(null);
 
-    const handleSinIn = ()=>{
-        setIsSignIn(!isSignIn);
+    const name = useRef(null);
+    const email = useRef(null);
+    const password = useRef(null);
+
+    const toggleSignIn = ()=>{
+        setIsSignIn(!isSignIn); 
+    }
+
+    const handleSignIn = ()=>{
+        console.log(email.current.value);
+        console.log(password.current.value);
+        const msg = checkValidData(email?.current?.value,password?.current?.value,name?.current?.value || "",isSignIn);
+        setErrMsg(msg);
     }
   return (
     <div className="relative h-screen w-full">
@@ -24,25 +37,29 @@ const Login = () => {
         <div className="bg-black bg-opacity-75 rounded-md w-full max-w-md py-12 px-16">
           <h1 className="text-white text-3xl font-bold mb-8">{isSignIn? "Sign In" : "Sign Up"}</h1>
 
-          <form className="flex flex-col space-y-5">
+          <form onSubmit={(e)=>{e.preventDefault()}}className="flex flex-col space-y-5">
             {!isSignIn && 
                 <input
+                ref={name}
                 className="p-4 bg-transparent bg-gray-50 bg-opacity-5 text-white rounded placeholder-gray-400 focus:ring-2 focus:ring-white border"
                 type="text"
                 placeholder="Enter your name"
                 />
             }
             <input
+                ref={email}
               className="p-4 bg-transparent bg-gray-50 bg-opacity-5 text-white rounded placeholder-gray-400 focus:ring-2 focus:ring-white border"
               type="text"
               placeholder="Email or phone number"
             />
             <input
+                ref={password}
               className="p-4 bg-transparent bg-gray-50 bg-opacity-5 text-white rounded placeholder-gray-400 focus:ring-2 focus:ring-white border"
               type="password"
               placeholder="Password"
             />
-            <button className="bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700 transition">
+            <p className='text-red-500'>{errMsg}</p>
+            <button onClick={handleSignIn} className="bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700 transition">
               {isSignIn? "Sign In" : "Sign Up"}
             </button>
             {isSignIn && <h1 className='text-gray-400 text-center'>OR</h1>}
@@ -58,7 +75,7 @@ const Login = () => {
 
             <p className="text-gray-400">
                 {isSignIn ? "New to Netflix? " : "Already Registered? " }
-                <span onClick={handleSinIn} className="text-white hover:underline cursor-pointer">{isSignIn ? "Sign Up" : "Sign In"}</span>.
+                <span onClick={toggleSignIn} className="text-white hover:underline cursor-pointer">{isSignIn ? "Sign Up" : "Sign In"}</span>.
             </p>
           </form>
 
