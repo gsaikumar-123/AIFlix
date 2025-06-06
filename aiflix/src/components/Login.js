@@ -2,8 +2,11 @@ import React, { useRef } from 'react';
 import Header from './Header';
 import { useState } from 'react';
 import { checkValidData } from '../utils/validate';
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/fireBase';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
 
 
 // Use formik library for validations if there are no.of forms to check validations
@@ -11,6 +14,8 @@ import { auth } from '../utils/fireBase';
 const Login = () => {
     const [isSignIn, setIsSignIn] = useState(true);
     const [errMsg,setErrMsg] = useState(null);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const name = useRef(null);
     const email = useRef(null);
@@ -31,8 +36,17 @@ const Login = () => {
           .then((userCredential) => {
             // Signed up   
             const user = userCredential.user;
-            console.log(user);
-            // ...
+            updateProfile(user, {
+              displayName: name?.current?.value, photoURL: "https://example.com/jane-q-user/profile.jpg"
+            }).then(() => {
+              const {uid,email,displayName,photoURL} = auth.currentUser;
+              dispatch(
+                addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL})
+              );
+              navigate("/browse");
+            }).catch((error) => {
+              setErrMsg(error.message);
+            });
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -46,6 +60,7 @@ const Login = () => {
               // Signed in 
               const user = userCredential.user;
               console.log(user);
+              navigate("/browse");
             })
             .catch((error) => {
               const errorCode = error.code;
