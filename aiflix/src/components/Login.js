@@ -2,6 +2,8 @@ import React, { useRef } from 'react';
 import Header from './Header';
 import { useState } from 'react';
 import { checkValidData } from '../utils/validate';
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../utils/fireBase';
 
 
 // Use formik library for validations if there are no.of forms to check validations
@@ -19,10 +21,38 @@ const Login = () => {
     }
 
     const handleSignIn = ()=>{
-        console.log(email.current.value);
-        console.log(password.current.value);
         const msg = checkValidData(email?.current?.value,password?.current?.value,name?.current?.value || "",isSignIn);
         setErrMsg(msg);
+
+        if(msg) return;
+
+        if(!isSignIn){
+          createUserWithEmailAndPassword(auth,email?.current?.value,password?.current?.value)
+          .then((userCredential) => {
+            // Signed up   
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setErrMsg(errorCode + " : " + errorMessage);
+          });
+        }
+        else{
+          signInWithEmailAndPassword(auth,email?.current?.value,password?.current?.value)
+            .then((userCredential) => {
+              // Signed in 
+              const user = userCredential.user;
+              console.log(user);
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              setErrMsg(errorCode + " : " + errorMessage);
+            });
+        }
     }
   return (
     <div className="relative h-screen w-full">
