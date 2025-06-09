@@ -30,28 +30,30 @@ const Login = () => {
 
         if(msg) return;
 
-        if(!isSignIn){
-          createUserWithEmailAndPassword(auth,email?.current?.value,password?.current?.value)
-          .then((userCredential) => {
-            // Signed up   
-            const user = userCredential.user;
-            updateProfile(user, {
-              displayName: name?.current?.value, photoURL: {USER_AVATAR}
-            }).then(() => {
-              const {uid,email,displayName,photoURL} = auth.currentUser;
-              dispatch(
-                addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL})
-              );
-            }).catch((error) => {
-              setErrMsg(error.message);
+        if (!isSignIn) {
+          createUserWithEmailAndPassword(auth, email?.current?.value, password?.current?.value)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              return updateProfile(user, {
+                        displayName: name?.current?.value,
+                        photoURL: USER_AVATAR,
+                      }).then(() => {
+                          const updatedUser = auth.currentUser;
+                          dispatch(addUser({
+                            uid: updatedUser.uid,
+                            email: updatedUser.email,
+                            displayName: updatedUser.displayName,
+                            photoURL: updatedUser.photoURL,
+                          }));
+              });
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              setErrMsg(errorCode + " : " + errorMessage);
             });
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            setErrMsg(errorCode + " : " + errorMessage);
-          });
         }
+
         else{
           signInWithEmailAndPassword(auth,email?.current?.value,password?.current?.value)
             .then((userCredential) => {
