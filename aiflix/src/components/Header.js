@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
 import { auth } from '../utils/fireBase';
 import { useNavigate } from 'react-router-dom';
-import { LOGO_URL } from '../utils/constants';
+import { LOGO_URL, USER_AVATAR } from '../utils/constants';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -41,9 +41,10 @@ const Header = () => {
         <img className='absolute px-4 py-1 w-56 ml-36' src={LOGO_URL} alt="logo"></img>
       </div>
 
-      {user && user.email && <div className='flex items-center'>
-        <img className="px-4 py-1 w-14 h-14 rounded-sm"src={user.photoURL} alt="user"></img>
-        <button onClick={handleSignOut} className="bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700 transition">Sign Out</button>
+      {user && user.email && 
+      <div className='flex items-center gap-2'>
+        <img className="px-4 py-1 w-auto h-12 rounded-sm"src={USER_AVATAR} alt="user"></img>
+        <button onClick={handleSignOut} className="bg-red-600 text-white p-2 rounded font-semibold hover:bg-red-700 transition">Sign Out</button>
       </div>}
     </div>
   )
