@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <React.StrictMode>  {/*Everything happens twice in development mode. React does some extra rendering of the components to check for some inconsistensies in between the calls*/}
     <App />
   </React.StrictMode>
 );
