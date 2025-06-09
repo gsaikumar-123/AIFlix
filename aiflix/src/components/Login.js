@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { checkValidData } from '../utils/validate';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/fireBase';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
+import { BANNER_URL, USER_AVATAR } from '../utils/constants';
 
 
 // Use formik library for validations if there are no.of forms to check validations
@@ -14,7 +14,6 @@ import { addUser } from '../utils/userSlice';
 const Login = () => {
     const [isSignIn, setIsSignIn] = useState(true);
     const [errMsg,setErrMsg] = useState(null);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const name = useRef(null);
@@ -37,13 +36,12 @@ const Login = () => {
             // Signed up   
             const user = userCredential.user;
             updateProfile(user, {
-              displayName: name?.current?.value, photoURL: "https://example.com/jane-q-user/profile.jpg"
+              displayName: name?.current?.value, photoURL: USER_AVATAR
             }).then(() => {
               const {uid,email,displayName,photoURL} = auth.currentUser;
               dispatch(
                 addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL})
               );
-              navigate("/browse");
             }).catch((error) => {
               setErrMsg(error.message);
             });
@@ -60,7 +58,6 @@ const Login = () => {
               // Signed in 
               const user = userCredential.user;
               console.log(user);
-              navigate("/browse");
             })
             .catch((error) => {
               const errorCode = error.code;
@@ -73,8 +70,8 @@ const Login = () => {
     <div className="relative h-screen w-full">
       <img
         className="absolute top-0 left-0 w-full h-full object-cover scale-125 -z-10"
-        src="https://assets.nflxext.com/ffe/siteui/vlv3/af2fac72-d956-4952-8686-4d45d359d78c/web/IN-en-20250526-TRIFECTA-perspective_5db3e163-56f7-47c7-9a65-b79b9d76bf24_large.jpg"
-        alt="bg"
+        src={BANNER_URL}
+        alt="Banner"
       />
       <div className="absolute top-0 left-0 w-full h-full scale-125 bg-black opacity-60 -z-0" />
       <Header />
