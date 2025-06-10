@@ -34,7 +34,7 @@ const Header = () => {
   const user = useSelector((store) => store.user)
 
   return (
-    <header className="absolute top-0 left-0 w-full z-10 bg-gradient-to-b from-black/90 to-transparent px-6 md:px-12 py-4">
+    <header className="absolute top-0 left-0 w-full z-20 bg-gradient-to-b from-black/90 to-transparent px-6 md:px-12 py-4">
       <div className="flex justify-between items-center max-w-screen-xl mx-auto">
         <img
           className="w-32 md:w-48"
