@@ -1,53 +1,64 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
-import { addUser, removeUser } from '../utils/userSlice';
-import { auth } from '../utils/fireBase';
-import { useNavigate } from 'react-router-dom';
-import { LOGO_URL, USER_AVATAR } from '../utils/constants';
+import { useSelector, useDispatch } from 'react-redux'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { useNavigate } from 'react-router-dom'
+import { auth } from '../utils/fireBase'
+import { addUser, removeUser } from '../utils/userSlice'
+import { LOGO_URL, USER_AVATAR } from '../utils/constants'
 
 const Header = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  
-  useEffect(()=>{
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const {uid,email,displayName,photoURL} = user;
-          dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}));
-          navigate("/browse");
-        } else {
-          dispatch(removeUser());
-          navigate("/");
-        }
-      });
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-      return () => unsubscribe();
-    },[]);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user
+        dispatch(addUser({ uid, email, displayName, photoURL }))
+        navigate('/browse')
+      } else {
+        dispatch(removeUser())
+        navigate('/')
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   const handleSignOut = () => {
-    signOut(auth).then(() => {
-      dispatch(removeUser());
-    }).catch((error) => {
-      console.error("Sign out error:", error);
-    });
-  };
+    signOut(auth)
+      .then(() => dispatch(removeUser()))
+      .catch((error) => console.error('Sign out error:', error))
+  }
 
-  const user = useSelector((store)=>store.user);
+  const user = useSelector((store) => store.user)
+
   return (
-    <div className='flex justify-between items-center'>
-      <div>
-        <img className='absolute px-4 py-1 w-56 ml-36' src={LOGO_URL} alt="logo"></img>
+    <header className="absolute top-0 left-0 w-full z-10 bg-gradient-to-b from-black/90 to-transparent px-6 md:px-12 py-4">
+      <div className="flex justify-between items-center max-w-screen-xl mx-auto">
+        <img
+          className="w-32 md:w-48"
+          src={LOGO_URL}
+          alt="Netflix Logo"
+        />
+        {user?.email && (
+          <div className="flex items-center space-x-4">
+            <img
+              className="w-10 h-10 rounded-md object-cover"
+              src={user.photoURL || USER_AVATAR}
+              alt="User avatar"
+            />
+            <button
+              onClick={handleSignOut}
+              className="bg-red-600 text-white px-4 py-1.5 rounded hover:bg-red-700 transition"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
       </div>
-
-      {user && user.email && 
-      <div className='flex items-center gap-2'>
-        <img className="px-4 py-1 w-auto h-12 rounded-sm"src={user.photoURL} alt="user"></img>
-        <button onClick={handleSignOut} className="bg-red-600 text-white p-2 rounded font-semibold hover:bg-red-700 transition">Sign Out</button>
-      </div>}
-    </div>
+    </header>
   )
 }
 
-export default Header;
+export default Header
