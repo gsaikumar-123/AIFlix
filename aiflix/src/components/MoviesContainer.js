@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import MovieList from "./MovieList";
 
-const MovieContainer = () => {
+const MoviesContainer = () => {
   const movies = useSelector((store) => store.movies);
 
   return (
@@ -17,4 +17,4 @@ const MovieContainer = () => {
     )
   );
 };
-export default MovieContainer;
+export default MoviesContainer;

@@ -11,7 +11,7 @@ const VideoBackGround = ({ movieId }) => {
   if (!trailerId) return
 
   return (
-    <div className="relative w-full aspect-video overflow-hidden scale-150">
+    <div className="relative w-full aspect-video overflow-hidden">
       <iframe
         className="w-full h-full"
         src={`https://www.youtube.com/embed/${trailerId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailerId}`}

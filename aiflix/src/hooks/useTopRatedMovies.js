@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { API_OPTIONS } from "../utils/constants";  
-import { addNowPlayingMovies, addTopRatedMovies } from "../utils/moviesSlice";
+import { addTopRatedMovies } from "../utils/moviesSlice";
 import { useEffect } from "react";
 
 
