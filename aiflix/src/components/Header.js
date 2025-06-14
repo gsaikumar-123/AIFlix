@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { auth } from '../utils/fireBase'
 import { addUser, removeUser } from '../utils/userSlice'
 import { LOGO_URL, USER_AVATAR } from '../utils/constants'
+import { toggleGPTSearch } from '../utils/gptSlice'
 
 const Header = () => {
   const dispatch = useDispatch()
@@ -25,6 +26,10 @@ const Header = () => {
     return () => unsubscribe()
   }, [])
 
+  const handleGPTSearch = () => {
+    dispatch(toggleGPTSearch());
+  }
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => dispatch(removeUser()))
@@ -43,6 +48,12 @@ const Header = () => {
         />
         {user?.email && (
           <div className="flex items-center space-x-4">
+            <button 
+              onClick={handleGPTSearch}
+              className="bg-red-600 text-white px-4 py-1.5 rounded hover:bg-red-700 transition"
+              >
+                GPT Search
+            </button>
             <img
               className="w-10 h-10 rounded-md object-cover"
               src={user.photoURL || USER_AVATAR}
